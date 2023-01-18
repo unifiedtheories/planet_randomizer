@@ -2,8 +2,7 @@ import {useState} from 'react';
 
 
 export default function App() {
-  const {hour, minutes, seconds, amPm} = useUpdatingClock()
-
+  
   //planet stuff
   const [radius, setRadius] = useState(0);
   const [circumference, setCirc] = useState(0);
