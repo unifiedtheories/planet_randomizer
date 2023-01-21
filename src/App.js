@@ -1,5 +1,5 @@
 import {useState} from 'react';
-
+import * as React from 'react';
 
 export default function App() {
   
@@ -44,34 +44,37 @@ export default function App() {
 
   const [starType, setStarType] = useState("")
 
-
+  const handleStarChange = (event) => {
+    setStarType(event.target.value);
+  }
+  
 
   function getStarMass() {
-      if (starType == "M") {
+      if (starType == "M - Red Dwarf") {
           setStarMass((Math.random() * (0.6 - 0.08 + 1) + 0.08).toFixed(2));
-      } else if (starType == "K") {
+      } else if (starType == "K - Orange Dwarf") {
           setStarMass((Math.random() * (0.9 - 0.6 + 1) + 0.6).toFixed(2));
-      } else if (starType == "G") {
+      } else if (starType == "G - Yellow Dwarf") {
           setStarMass((Math.random() * (1.05 - 0.9 + 1) + 0.9).toFixed(2));
       }
   }
 
   function getStarRadius() {
-      if (starType == "M") {
+      if (starType == "M - Red Dwarf") {
           setStarRad((Math.random() * (0.6 - 0.1 + 1) + 0.1).toFixed(2));
-      } else if (starType == "K") {
+      } else if (starType == "K - Orange Dwarf") {
           setStarRad((Math.random() * (0.8 - 0.6 + 1) + 0.6).toFixed(2));
-      } else if (starType == "G") {
+      } else if (starType == "G - Yellow Dwarf") {
           setStarRad((Math.random() * (1.1 - 0.9 + 1) + 0.9).toFixed(2));
       }
   }
 
   function getStarLuminosity() {
-      if (starType == "M") {
+      if (starType == "M - Red Dwarf") {
           setLuminosity((Math.random() * (0.07 - 0.0005 + 1) + 0.0005).toFixed(2));
-      } else if (starType == "K") {
+      } else if (starType == "K - Orange Dwarf") {
           setLuminosity((Math.random() * (0.5 - 0.08 + 1) + 0.08).toFixed(2));
-      } else if (starType == "G") {
+      } else if (starType == "G - Yellow Dwarf") {
           setLuminosity((Math.random() * (1.4 - 0.6 + 1) + 0.6).toFixed(2));
       }
   }
@@ -84,10 +87,12 @@ export default function App() {
     getRandomMass()
     getSize()
 
-    setStarType("M")
-    getStarMass()
-    getStarRadius()
-    getStarLuminosity()
+    if(starType !== "") {
+      getStarMass()
+      getStarRadius()
+      getStarLuminosity()
+    }
+    
 
   }
   /*
@@ -122,7 +127,20 @@ export default function App() {
         <div> RADIUS: {radius}km </div>
         <div> CIRCUMFERENCE: {circumference}km </div>
         <div> TOTAL SURFACE AREA: {surfaceArea.total}km<sup>2</sup></div>
-        <div> STAR TYPE: {starType} - Red Dwarf </div>
+
+        <div>
+          <Dropdown
+          label="Choose Star Type"
+          options={[
+            {label: "M - Red Dwarf", value: "M - Red Dwarf"},
+            {label: "K - Orange Dwarf", value: "K - Orange Dwarf"},
+            {label: "G - Yellow Dwarf", value: "G - Yellow Dwarf"}
+          ]}
+          value={starType}
+          onChange={handleStarChange}
+          />
+        </div>
+        <p> STAR TYPE: {starType} </p>
         <div> STELLAR MASS: {starMass} Solar Masses </div>
         <div> STELLAR RADIUS: {starRadius} Solar Radius </div>
         <div> STELLAR LUMINOSITY: {luminosity} Solar Luminosity </div>
@@ -134,3 +152,16 @@ export default function App() {
 
   )
 }
+
+const Dropdown = ({label, value, options, onChange}) => {
+  return (
+    <label>
+      {label}
+      <select value={value} onChange={onChange}>
+        {options.map((option) => (
+          <option value={option.value}>{option.label}</option>
+        ))}
+      </select>
+    </label>
+  );
+};
