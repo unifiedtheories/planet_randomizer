@@ -42,6 +42,11 @@ export default function App() {
   const [starRadius, setStarRad] = useState(0);
   const [luminosity, setLuminosity] = useState(0);
 
+  const [goldilocks, setGoldilocks] = useState({
+    inner: 0,
+    outer: 0
+  });
+
   const [starType, setStarType] = useState("")
 
   const handleStarChange = (event) => {
@@ -79,6 +84,13 @@ export default function App() {
       }
   }
 
+  function getGoldilocks() {
+    setGoldilocks({
+      inner: (Math.sqrt(luminosity/1.1).toFixed(2)),
+      outer: (Math.sqrt(luminosity/0.53).toFixed(2))
+    })
+  }
+
 
 
   
@@ -91,6 +103,7 @@ export default function App() {
       getStarMass()
       getStarRadius()
       getStarLuminosity()
+      getGoldilocks()
     }
     
 
@@ -144,7 +157,7 @@ export default function App() {
         <div> STELLAR MASS: {starMass} Solar Masses </div>
         <div> STELLAR RADIUS: {starRadius} Solar Radius </div>
         <div> STELLAR LUMINOSITY: {luminosity} Solar Luminosity </div>
-        
+        <div> GOLDILOCKS ZONE: {goldilocks.inner} - {goldilocks.outer}</div>
         
        </body>
         
