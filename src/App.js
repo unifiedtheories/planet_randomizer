@@ -17,7 +17,10 @@ export default function App() {
       setMass(Math.random() * (7.5 - 0.4 + 1) + 0.4);
   }
 
-  function getSize() {
+  function setPlanet() {
+    //mass
+    getRandomMass()
+
     //radius
     const rad = ((Math.random() * (2.5 - 0.7 + 1) + 0.7) * 6371).toFixed(2)
     setRadius(rad)
@@ -41,11 +44,8 @@ export default function App() {
   const [starMass, setStarMass] = useState(0);
   const [starRadius, setStarRad] = useState(0);
   const [luminosity, setLuminosity] = useState(0);
-
-  const [goldilocks, setGoldilocks] = useState({
-    inner: 0,
-    outer: 0
-  });
+  const [semimajorAxis, setSemimajor] = useState(0);
+  
 
   const [starType, setStarType] = useState("")
 
@@ -53,61 +53,56 @@ export default function App() {
     setStarType(event.target.value);
   }
   
-
-  function getStarMass() {
-      if (starType == "M - Red Dwarf") {
-          setStarMass((Math.random() * (0.6 - 0.08 + 1) + 0.08).toFixed(2));
-      } else if (starType == "K - Orange Dwarf") {
-          setStarMass((Math.random() * (0.9 - 0.6 + 1) + 0.6).toFixed(2));
-      } else if (starType == "G - Yellow Dwarf") {
-          setStarMass((Math.random() * (1.05 - 0.9 + 1) + 0.9).toFixed(2));
-      }
+  function setStar() {
+    if (starType == "M - Red Dwarf") {
+      //mass
+      setStarMass((Math.random() * (0.6 - 0.08 + 1) + 0.08));
+      //radius
+      setStarRad((Math.random() * (0.6 - 0.1 + 1) + 0.1));
+      //luminosity
+      setLuminosity((Math.random() * (0.07 - 0.0005 + 1) + 0.0005));
+  } else if (starType == "K - Orange Dwarf") {
+      //mass
+      setStarMass((Math.random() * (0.9 - 0.6 + 1) + 0.6));
+      //radius
+      setStarRad((Math.random() * (0.8 - 0.6 + 1) + 0.6));
+      //luminosity
+      setLuminosity((Math.random() * (0.5 - 0.08 + 1) + 0.08));
+  } else if (starType == "G - Yellow Dwarf") {
+      //mass
+      setStarMass((Math.random() * (1.05 - 0.9 + 1) + 0.9));
+      //radius
+      setStarRad((Math.random() * (1.1 - 0.9 + 1) + 0.9));
+      //luminosity
+      setLuminosity((Math.random() * (1.4 - 0.6 + 1) + 0.6));
   }
 
-  function getStarRadius() {
-      if (starType == "M - Red Dwarf") {
-          setStarRad((Math.random() * (0.6 - 0.1 + 1) + 0.1).toFixed(2));
-      } else if (starType == "K - Orange Dwarf") {
-          setStarRad((Math.random() * (0.8 - 0.6 + 1) + 0.6).toFixed(2));
-      } else if (starType == "G - Yellow Dwarf") {
-          setStarRad((Math.random() * (1.1 - 0.9 + 1) + 0.9).toFixed(2));
-      }
-  }
-
-  function getStarLuminosity() {
-      if (starType == "M - Red Dwarf") {
-          setLuminosity((Math.random() * (0.07 - 0.0005 + 1) + 0.0005).toFixed(2));
-      } else if (starType == "K - Orange Dwarf") {
-          setLuminosity((Math.random() * (0.5 - 0.08 + 1) + 0.08).toFixed(2));
-      } else if (starType == "G - Yellow Dwarf") {
-          setLuminosity((Math.random() * (1.4 - 0.6 + 1) + 0.6).toFixed(2));
-      }
-  }
-
-  function getGoldilocks() {
-    setGoldilocks({
-      inner: (Math.sqrt(luminosity/1.1).toFixed(2)),
-      outer: (Math.sqrt(luminosity/0.53).toFixed(2))
-    })
-  }
-
-
-
-  
-  
-  const setAll = () => {
-    getRandomMass()
-    getSize()
-
-    if(starType !== "") {
-      getStarMass()
-      getStarRadius()
-      getStarLuminosity()
-      getGoldilocks()
-    }
     
+  }
+
+  const [orbitalPeriod, setOP] = useState(0);
+
+  function setOrbit() {
+    const goldiInner = (Math.sqrt(luminosity/1.1));
+    const goldiOuter = (Math.sqrt(luminosity/0.53));
+    const semi = (Math.random() * (goldiOuter - goldiInner) + goldiInner).toFixed(2);
+
+    setSemimajor(semi);
+    
+    const planetKG = mass * (6 * Math.pow(10, 24))
+    const sunKG = starMass * (2 * Math.pow(10, 30))
+    const semiMetres = semi * (1.5 * Math.pow(10,11))
+    const p = Math.sqrt(4 * Math.pow(Math.PI, 2) / ((6.67 * Math.pow(10, -11)) * (planetKG + sunKG))) * Math.pow(semiMetres, 3);
+    console.log(p/86400)
+    setOP(p);
+
 
   }
+
+
+
+  
+
   /*
   const dropdownBtn = document.getElementById("btn");
   const dropdownMenu = document.getElementById("dropdown");
@@ -134,8 +129,8 @@ export default function App() {
   return (
     
        <body>
-        <button onClick={() => setAll()}>
-          new radius
+        <button onClick={() => setPlanet()}>
+          new planet
         </button>
         <div> RADIUS: {radius}km </div>
         <div> CIRCUMFERENCE: {circumference}km </div>
@@ -145,6 +140,7 @@ export default function App() {
           <Dropdown
           label="Choose Star Type"
           options={[
+            {label: "-----star type-----", value: ""},
             {label: "M - Red Dwarf", value: "M - Red Dwarf"},
             {label: "K - Orange Dwarf", value: "K - Orange Dwarf"},
             {label: "G - Yellow Dwarf", value: "G - Yellow Dwarf"}
@@ -153,12 +149,18 @@ export default function App() {
           onChange={handleStarChange}
           />
         </div>
-        <p> STAR TYPE: {starType} </p>
-        <div> STELLAR MASS: {starMass} Solar Masses </div>
-        <div> STELLAR RADIUS: {starRadius} Solar Radius </div>
-        <div> STELLAR LUMINOSITY: {luminosity} Solar Luminosity </div>
-        <div> GOLDILOCKS ZONE: {goldilocks.inner} - {goldilocks.outer}</div>
-        
+        <button onClick={() => setStar()}>
+          new star
+        </button>
+        <div> STAR TYPE: {starType} </div>
+        <div> STELLAR MASS: {starMass.toFixed(2)} Solar Masses </div>
+        <div> STELLAR RADIUS: {starRadius.toFixed(2)} Solar Radius </div>
+        <div> STELLAR LUMINOSITY: {luminosity.toFixed(2)} Solar Luminosity </div>
+        <button onClick={() => setOrbit()}>
+          get orbit details
+        </button>
+        <div> SEMIMAJOR AXIS: {semimajorAxis} AU </div>
+        <div> ORBITAL PERIOD: {orbitalPeriod.toFixed(2)}</div>
        </body>
         
           
