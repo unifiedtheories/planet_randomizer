@@ -89,12 +89,10 @@ export default function App() {
 
     setSemimajor(semi);
     
-    const planetKG = mass * (6 * Math.pow(10, 24))
-    const sunKG = starMass * (2 * Math.pow(10, 30))
-    const semiMetres = semi * (1.5 * Math.pow(10,11))
-    const p = Math.sqrt(4 * Math.pow(Math.PI, 2) / ((6.67 * Math.pow(10, -11)) * (planetKG + sunKG))) * Math.pow(semiMetres, 3);
-    console.log(p/86400)
-    setOP(p);
+    const sunKG = starMass * (2 * Math.pow(10, 30));
+    const semiM = semi * ( 1.48 * Math.pow(10,11));
+    const p = Math.sqrt( (4 * Math.pow(Math.PI,2) * Math.pow(semiM,3)) /  (( 6.67 * Math.pow(10, -11) ) * sunKG) );
+    setOP(p / 86400);
 
 
   }
@@ -160,7 +158,7 @@ export default function App() {
           get orbit details
         </button>
         <div> SEMIMAJOR AXIS: {semimajorAxis} AU </div>
-        <div> ORBITAL PERIOD: {orbitalPeriod.toFixed(2)}</div>
+        <div> ORBITAL PERIOD: {orbitalPeriod.toFixed(2)} days</div>
        </body>
         
           
