@@ -98,6 +98,14 @@ export default function App() {
   }
 
 
+  const [population, setPop] = useState(0);
+
+  function setPopulation() {
+    const pop = ((surfaceArea.land * (Math.random() * (65 - 40 + 1) + 40))).toFixed(2);
+    console.log(pop)
+    setPop(pop);
+  }
+
 
   
 
@@ -133,6 +141,8 @@ export default function App() {
         <div> RADIUS: {radius}km </div>
         <div> CIRCUMFERENCE: {circumference}km </div>
         <div> TOTAL SURFACE AREA: {surfaceArea.total}km<sup>2</sup></div>
+        <div> LAND SURFACE AREA: {surfaceArea.land}km<sup>2</sup></div>
+        <div> OCEAN SURFACE AREA: {surfaceArea.ocean}km<sup>2</sup></div>
 
         <div>
           <Dropdown
@@ -159,8 +169,13 @@ export default function App() {
         </button>
         <div> SEMIMAJOR AXIS: {semimajorAxis} AU </div>
         <div> ORBITAL PERIOD: {orbitalPeriod.toFixed(2)} days</div>
+        <button onClick={() => setPopulation()}>
+          get population details
+        </button>
+        <div> POPULATION SIZE: {population}</div>
        </body>
         
+          
           
 
   )
