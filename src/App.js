@@ -1,9 +1,10 @@
 import {useState} from 'react';
 import * as React from 'react';
+import './App.css';
 
 export default function App() {
   
-  //planet stuff
+  //planet constants
   const [radius, setRadius] = useState(0);
   const [circumference, setCirc] = useState(0);
   const [mass, setMass] = useState(0);
@@ -13,13 +14,12 @@ export default function App() {
       land: 0
   })
 
-  function getRandomMass() {
-      setMass(Math.random() * (7.5 - 0.4 + 1) + 0.4);
-  }
 
   function setPlanet() {
+    //this function sets all the functionalities of the planet
+    
     //mass
-    getRandomMass()
+    setMass(Math.random() * (7.5 - 0.4 + 1) + 0.4);
 
     //radius
     const rad = ((Math.random() * (2.5 - 0.7 + 1) + 0.7) * 6371).toFixed(2)
@@ -30,12 +30,12 @@ export default function App() {
 
     //surface Area
     const totalSA = (4 * Math.PI * Math.pow(rad, 2)).toFixed(2);
-    const randomOcean = (Math.random() * (0.80 - 0.60 + 1) + 0.60);
+    const randomOcean = (Math.random() * (0.80 - 0.60) + 0.60);
 
     const newSA = {
       total: totalSA,
       ocean: (totalSA * randomOcean).toFixed(2),
-      land: ((totalSA * randomOcean) - totalSA).toFixed(2)
+      land: (totalSA - (totalSA * randomOcean)).toFixed(2)
     }
     setSurfaceArea(newSA);
   }
@@ -83,23 +83,22 @@ export default function App() {
   const [orbitalPeriod, setOP] = useState(0);
 
   function setOrbit() {
+    //estimate possible goldilocks zone and assume a random 
+    //semimajor axis from there
     const goldiInner = (Math.sqrt(luminosity/1.1));
     const goldiOuter = (Math.sqrt(luminosity/0.53));
     const semi = (Math.random() * (goldiOuter - goldiInner) + goldiInner).toFixed(2);
-
     setSemimajor(semi);
     
+    //set orbital period using Newtons third law of motion
     const sunKG = starMass * (2 * Math.pow(10, 30));
     const semiM = semi * ( 1.48 * Math.pow(10,11));
     const p = Math.sqrt( (4 * Math.pow(Math.PI,2) * Math.pow(semiM,3)) /  (( 6.67 * Math.pow(10, -11) ) * sunKG) );
     setOP(p / 86400);
-
-
   }
 
 
   const [population, setPop] = useState(0);
-
   function setPopulation() {
     const pop = ((surfaceArea.land * (Math.random() * (65 - 40 + 1) + 40))).toFixed(2);
     console.log(pop)
@@ -107,8 +106,12 @@ export default function App() {
   }
 
 
+  function setPlanetandStar() {
+    setPlanet();
+    setStar();
+  }
   
-
+  // scrapped attempt at making a dropdown menu, may use later
   /*
   const dropdownBtn = document.getElementById("btn");
   const dropdownMenu = document.getElementById("dropdown");
@@ -133,49 +136,68 @@ export default function App() {
   */
 
   return (
-    
+      
        <body>
-        <button onClick={() => setPlanet()}>
-          new planet
-        </button>
-        <div> RADIUS: {radius}km </div>
-        <div> CIRCUMFERENCE: {circumference}km </div>
-        <div> TOTAL SURFACE AREA: {surfaceArea.total}km<sup>2</sup></div>
-        <div> LAND SURFACE AREA: {surfaceArea.land}km<sup>2</sup></div>
-        <div> OCEAN SURFACE AREA: {surfaceArea.ocean}km<sup>2</sup></div>
-
-        <div>
-          <Dropdown
-          label="Choose Star Type"
-          options={[
-            {label: "-----star type-----", value: ""},
-            {label: "M - Red Dwarf", value: "M - Red Dwarf"},
-            {label: "K - Orange Dwarf", value: "K - Orange Dwarf"},
-            {label: "G - Yellow Dwarf", value: "G - Yellow Dwarf"}
-          ]}
-          value={starType}
-          onChange={handleStarChange}
-          />
+        <div className='Heading'>
+          <h2>Generate your own exoplanet!</h2>
         </div>
-        <button onClick={() => setStar()}>
-          new star
-        </button>
-        <div> STAR TYPE: {starType} </div>
-        <div> STELLAR MASS: {starMass.toFixed(2)} Solar Masses </div>
-        <div> STELLAR RADIUS: {starRadius.toFixed(2)} Solar Radius </div>
-        <div> STELLAR LUMINOSITY: {luminosity.toFixed(2)} Solar Luminosity </div>
-        <button onClick={() => setOrbit()}>
-          get orbit details
-        </button>
-        <div> SEMIMAJOR AXIS: {semimajorAxis} AU </div>
-        <div> ORBITAL PERIOD: {orbitalPeriod.toFixed(2)} days</div>
-        <button onClick={() => setPopulation()}>
-          get population details
-        </button>
-        <div> POPULATION SIZE: {population}</div>
-       </body>
+        <div className='App'>
+          <h2>Planetary Information</h2>
+          <p> RADIUS: {radius}km </p>
+          <p> CIRCUMFERENCE: {circumference}km </p>
+          <p> TOTAL SURFACE AREA: {surfaceArea.total}km<sup>2</sup></p>
+          <p> LAND SURFACE AREA: {surfaceArea.land}km<sup>2</sup></p>
+          <p> OCEAN SURFACE AREA: {surfaceArea.ocean}km<sup>2</sup></p>
+          <p> POPULATION SIZE: {population}</p>
+        </div>
+        
+        
+        
         
           
+          
+          
+        <div className='App'>
+          <h2>Stellar Information</h2>
+          <p> STAR TYPE: {starType} </p>
+          <p> STELLAR MASS: {starMass.toFixed(2)} Solar Masses </p>
+          <p> STELLAR RADIUS: {starRadius.toFixed(2)} Solar Radius </p>
+          <p> STELLAR LUMINOSITY: {luminosity.toFixed(2)} Solar Luminosity </p>
+          <p> SEMIMAJOR AXIS: {semimajorAxis} AU </p>
+          <p> ORBITAL PERIOD: {orbitalPeriod.toFixed(2)} days</p>
+        </div>
+
+        <div className='Selects'>
+            <Dropdown
+              className='Dropdown'
+              label="Choose Star Type"
+              options={[
+                {label: "", value: ""},
+                {label: "M - Red Dwarf", value: "M - Red Dwarf"},
+                {label: "K - Orange Dwarf", value: "K - Orange Dwarf"},
+                {label: "G - Yellow Dwarf", value: "G - Yellow Dwarf"}
+                ]}
+              value={starType}
+              onChange={handleStarChange}
+            />
+          </div>
+
+        <div className='Selects'>
+          <button className='Btns' onClick={() => setPlanetandStar()}>
+            generate!
+          </button>
+          <button className='Btns' onClick={() => setOrbit()}>
+            get orbit details
+          </button>
+          <button className='Btns' onClick={() => setPopulation()}>
+            get population details
+          </button>
+        </div>
+        
+
+       </body>
+        
+        
           
 
   )
